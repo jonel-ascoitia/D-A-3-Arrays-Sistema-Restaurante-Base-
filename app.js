@@ -52,6 +52,33 @@ function buscarPlatoPorNombre(nombre) {
     }
 }
 
+// FUNCIONES DÍA 4 - Parte D, E y F (Esteban driver)
+function filtrarStockBajo() {
+    const platosStockBajo = menu.filter(plato => plato.stock <= 3);
+    const listaTextos = platosStockBajo.map(plato => `${plato.nombre} — stock ${plato.stock}`);
+    renderLista("Platos con stock bajo", listaTextos);
+}
+
+function obtenerResumenMenu() {
+    const resumen = menu.map(plato => `${plato.nombre} — S/ ${plato.precio}`);
+    renderLista("Resumen del menú", resumen);
+}
+
+function venderPlato(nombre, cantidad) {
+    const plato = menu.find(p => p.nombre.toLowerCase() === nombre.toLowerCase());
+    if (!plato) {
+        renderLista("Resultado de venta", ["Plato no existe"]);
+        return;
+    }
+    if (plato.stock >= cantidad) {
+        plato.stock -= cantidad;
+        renderLista("Resultado de venta", ["Venta realizada"]);
+        renderMenu();
+    } else {
+        renderLista("Resultado de venta", ["Stock insuficiente"]);
+    }
+}
+
 // 5) EVENTOS
 document.getElementById("btnMostrar").addEventListener("click", () => {
     renderMenu();
@@ -63,4 +90,10 @@ document.getElementById("btnAgregar").addEventListener("click", () => {
 document.getElementById("btnBuscar").addEventListener("click", () => {
     const inputDesc = document.getElementById("inputBuscar").value;
     buscarPlatoPorNombre(inputDesc);
+});
+document.getElementById("btnStockBajo").addEventListener("click", () => {
+    filtrarStockBajo();
+});
+document.getElementById("btnResumen").addEventListener("click", () => {
+    obtenerResumenMenu();
 });
