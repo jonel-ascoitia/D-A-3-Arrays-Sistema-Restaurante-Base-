@@ -7,6 +7,11 @@ let menu = [
     { nombre: "Causa limeña", precio: 10, stock: 12 }
 ];
 
+// 2.5) FUNCIÓN: contar platos
+function contarPlatos() {
+    return menu.length;
+}
+
 // 2) FUNCIÓN: renderizar (mostrar) el menú en pantalla
 function renderMenu() {
     const output = document.getElementById("output");
@@ -17,6 +22,7 @@ function renderMenu() {
         html += `<li>${plato.nombre} — S/ ${plato.precio} — Stock: ${plato.stock}</li>`;
     }
     html += "</ul>";
+    html += `<p><strong>Total de platos en el menú: ${contarPlatos()}</strong></p>`;
     output.innerHTML = html;
 }
 
