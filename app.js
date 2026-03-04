@@ -32,7 +32,17 @@ function agregarPlatoDemo() {
     menu.push(nuevoPlato);
 }
 
-// 4) FUNCIONES DÍA 4 - Parte C (Jonel driver)
+// 4) FUNCIONES DÍA 4 - Parte B y C (Jonel driver)
+function renderLista(titulo, listaDeTextos) {
+    const output = document.getElementById("output");
+    let html = `<h3>${titulo}</h3><ul>`;
+    for (let i = 0; i < listaDeTextos.length; i++) {
+        html += `<li>${listaDeTextos[i]}</li>`;
+    }
+    html += "</ul>";
+    output.innerHTML = html;
+}
+
 function buscarPlatoPorNombre(nombre) {
     const platoEncontrado = menu.find(plato => plato.nombre.toLowerCase() === nombre.toLowerCase());
     if (platoEncontrado) {
