@@ -32,11 +32,25 @@ function agregarPlatoDemo() {
     menu.push(nuevoPlato);
 }
 
-// 4) EVENTOS
+// 4) FUNCIONES DÍA 4 - Parte C (Jonel driver)
+function buscarPlatoPorNombre(nombre) {
+    const platoEncontrado = menu.find(plato => plato.nombre.toLowerCase() === nombre.toLowerCase());
+    if (platoEncontrado) {
+        renderLista("Plato encontrado", [`${platoEncontrado.nombre} — S/ ${platoEncontrado.precio} — Stock ${platoEncontrado.stock}`]);
+    } else {
+        renderLista("Plato encontrado", ["No encontrado"]);
+    }
+}
+
+// 5) EVENTOS
 document.getElementById("btnMostrar").addEventListener("click", () => {
     renderMenu();
 });
 document.getElementById("btnAgregar").addEventListener("click", () => {
     agregarPlatoDemo();
     renderMenu();
+});
+document.getElementById("btnBuscar").addEventListener("click", () => {
+    const inputDesc = document.getElementById("inputBuscar").value;
+    buscarPlatoPorNombre(inputDesc);
 });
