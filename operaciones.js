@@ -55,3 +55,31 @@ export function verificarEstadoGeneral() {
     if (bajos > 0) return `🟠 Hay platos con stock bajo`;
     return "✅ Todo disponible";
 }
+
+// ============================================================
+// DÍA 7: Funciones asincrónicas (Promesas y async/await)
+// ============================================================
+
+export function simularRespuestaServidor(resultado) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            const falla = Math.random() < 0.3;
+            if (falla) {
+                reject(new Error("Error del servidor simulado"));
+            } else {
+                resolve(resultado);
+            }
+        }, 2000);
+    });
+}
+
+export async function venderPlatoAsync(nombre, cantidad) {
+    const resultado = venderPlato(nombre, cantidad);
+
+    if (!resultado.ok) {
+        throw new Error(resultado.mensaje);
+    }
+
+    const respuestaServidor = await simularRespuestaServidor(resultado.mensaje);
+    return respuestaServidor;
+}
