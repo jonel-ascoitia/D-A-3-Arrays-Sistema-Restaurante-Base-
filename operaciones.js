@@ -1,8 +1,14 @@
 // ============================================================
 // operaciones.js — DÍA 6: Capa LÓGICA de negocio (Esteban driver)
 // Contiene reglas de negocio. Importa datos, NO toca el DOM.
-// ⚠️ NO usar document, innerHTML ni addEventListener aquí.
 // ============================================================
+
+export class ErrorNegocio extends Error {
+    constructor(mensaje) {
+        super(mensaje);
+        this.name = "ErrorNegocio";
+    }
+}
 
 import { menu } from "./menu.js";
 
@@ -74,12 +80,30 @@ export function simularRespuestaServidor(resultado) {
 }
 
 export async function venderPlatoAsync(nombre, cantidad) {
-    const resultado = venderPlato(nombre, cantidad);
-
-    if (!resultado.ok) {
-        throw new Error(resultado.mensaje);
+    if (!nombre || nombre.trim() === "") {
+        throw new ErrorNegocio("Debe ingresar un nombre de plato");
+    }
+    if (isNaN(cantidad)) {
+        throw new ErrorNegocio("Cantidad inválida");
+    }
+    if (cantidad <= 0) {
+        throw new ErrorNegocio("La cantidad debe ser mayor que cero");
     }
 
+    const plato = menu.find(p => p.nombre.toLowerCase() === nombre.toLowerCase());
+
+    if (!plato) {
+        throw new ErrorNegocio("El plato no existe");
+    }
+    if (cantidad > plato.stock) {
+        throw new ErrorNegocio("Stock insuficiente");
+    }
+
+    // Procesa usando la función síncrona original
+    const resultado = venderPlato(nombre, cantidad);
+
+    // Simula servidor real, donde el fallo tira Error del sistema
     const respuestaServidor = await simularRespuestaServidor(resultado.mensaje);
+
     return respuestaServidor;
 }

@@ -68,14 +68,29 @@ export function conectarEventos() {
     if (btnVender) {
         btnVender.addEventListener("click", async () => {
             const nombre = document.getElementById("inputBuscar").value;
-            const cantidad = 1;
+            const cantidad = Number(document.getElementById("inputCantidad").value);
+
+            if (!nombre) {
+                mostrarMensaje("Debe ingresar un plato", "error");
+                return;
+            }
+
+            if (!cantidad || cantidad <= 0) {
+                mostrarMensaje("Cantidad inválida", "error");
+                return;
+            }
+
             try {
                 mostrarMensaje("Procesando pedido...", "procesando");
                 const mensaje = await venderPlatoAsync(nombre, cantidad);
                 mostrarMensaje(mensaje, "exito");
                 renderMenu();
             } catch (error) {
-                mostrarMensaje(error.message, "error");
+                if (error.name === "ErrorNegocio") {
+                    mostrarMensaje("Advertencia: " + error.message, "error");
+                } else {
+                    mostrarMensaje("Error del sistema: " + error.message, "error");
+                }
             }
         });
     }
