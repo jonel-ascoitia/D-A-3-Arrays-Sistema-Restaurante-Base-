@@ -12,18 +12,29 @@ function contarPlatos() {
     return menu.length;
 }
 
-// 2) FUNCIÓN: renderizar (mostrar) el menú en pantalla
+// 2) DÍA 5: FUNCIÓN renderMenu con estados dinámicos (Jonel driver)
 function renderMenu() {
     const output = document.getElementById("output");
     output.innerHTML = ""; // limpiar
     let html = "<ul>";
     for (let i = 0; i < menu.length; i++) {
         const plato = menu[i];
-        html += `<li>${plato.nombre} — S/ ${plato.precio} — Stock: ${plato.stock}</li>`;
+        // Calcular estado dinámico según stock (no se agrega al objeto)
+        let clase = "normal";
+        let etiqueta = "";
+        if (plato.stock === 0) {
+            clase = "agotado";
+            etiqueta = " (AGOTADO)";
+        } else if (plato.stock <= 3) {
+            clase = "bajo";
+            etiqueta = " (Stock bajo)";
+        }
+        html += `<li class="${clase}">${plato.nombre} — S/ ${plato.precio} — Stock: ${plato.stock}${etiqueta}</li>`;
     }
     html += "</ul>";
     html += `<p><strong>Total de platos en el menú: ${contarPlatos()}</strong></p>`;
     output.innerHTML = html;
+    verificarEstadoGeneral(); // Día 5: siempre mostrar estado global
 }
 
 // 3) FUNCIÓN: agregar un plato demo al menú
@@ -64,19 +75,48 @@ function obtenerResumenMenu() {
     renderLista("Resumen del menú", resumen);
 }
 
+// DÍA 5: venderPlato mejorado con validación de agotado (Esteban driver)
 function venderPlato(nombre, cantidad) {
     const plato = menu.find(p => p.nombre.toLowerCase() === nombre.toLowerCase());
     if (!plato) {
         renderLista("Resultado de venta", ["Plato no existe"]);
         return;
     }
+    if (plato.stock === 0) {
+        renderLista("Resultado de venta", ["No disponible"]);
+        return;
+    }
     if (plato.stock >= cantidad) {
         plato.stock -= cantidad;
         renderLista("Resultado de venta", ["Venta realizada"]);
-        renderMenu();
+        renderMenu(); // si stock llega a 0 se verá rojo automáticamente
     } else {
         renderLista("Resultado de venta", ["Stock insuficiente"]);
     }
+}
+
+// DÍA 5: verificarEstadoGeneral con bucle for (Esteban driver)
+function verificarEstadoGeneral() {
+    let agotados = 0;
+    let stockBajo = 0;
+    for (let i = 0; i < menu.length; i++) {
+        if (menu[i].stock === 0) {
+            agotados++;
+        } else if (menu[i].stock <= 3) {
+            stockBajo++;
+        }
+    }
+    let mensaje = "";
+    if (agotados > 0) {
+        mensaje = `⚠️ Hay ${agotados} plato(s) agotado(s).`;
+    } else if (stockBajo > 0) {
+        mensaje = `🟠 Hay ${stockBajo} plato(s) con stock bajo.`;
+    } else {
+        mensaje = "✅ Todo disponible.";
+    }
+    // Agregar mensaje debajo del menú
+    const output = document.getElementById("output");
+    output.innerHTML += `<p><em>${mensaje}</em></p>`;
 }
 
 // 5) EVENTOS
